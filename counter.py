@@ -6,6 +6,8 @@
 
 import urllib.request
 from pathlib import Path
+from datetime import datetime
+import time
 import cv2
 import mediapipe as mp
 from mediapipe.tasks import python as mp_python
@@ -71,6 +73,8 @@ def main():
     cap = cv2.VideoCapture(CAMERA_INDEX)
     count = 0
     touching = False
+    start_time = time.time()
+    start_dt = datetime.now()
 
     print("실행 중... (Q 키로 종료)")
 
@@ -121,7 +125,26 @@ def main():
     cv2.destroyAllWindows()
     face_detector.close()
     hand_landmarker.close()
-    print(f"총 얼굴 접촉 횟수: {count}")
+
+    elapsed_sec = time.time() - start_time
+    elapsed_min = elapsed_sec / 60
+    per_min = count / elapsed_min if elapsed_min > 0 else 0
+
+    summary = (
+        f"날짜       : {start_dt.strftime('%Y-%m-%d')}\n"
+        f"시작 시각  : {start_dt.strftime('%H:%M:%S')}\n"
+        f"소요 시간  : {int(elapsed_min)}분 {int(elapsed_sec % 60)}초\n"
+        f"접촉 횟수  : {count}회\n"
+        f"분당 접촉  : {per_min:.1f}회/분\n"
+    )
+
+    print("\n" + summary)
+
+    log_dir = Path(__file__).parent / "logs"
+    log_dir.mkdir(exist_ok=True)
+    log_file = log_dir / f"{start_dt.strftime('%Y%m%d_%H%M%S')}.txt"
+    log_file.write_text(summary, encoding="utf-8")
+    print(f"저장됨: {log_file}")
 
 
 if __name__ == "__main__":
