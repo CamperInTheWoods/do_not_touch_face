@@ -133,17 +133,23 @@ def main():
             count += 1
         touching = currently_touching
 
+        # 경과 시간 계산
+        elapsed = int(time.time() - start_time)
+        elapsed_str = f"{elapsed // 60:02d}:{elapsed % 60:02d}"
+
         # 반투명 배경
         overlay = frame.copy()
-        box_h = 110 if touching else 65
+        box_h = 130 if touching else 90
         cv2.rectangle(overlay, (10, 10), (420, box_h), (0, 0, 0), -1)
         cv2.addWeighted(overlay, 0.5, frame, 0.5, 0, frame)
 
         color = (0, 0, 255) if touching else (255, 255, 255)
         cv2.putText(frame, f"Touch count: {count}", (20, 50),
                     cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 2)
+        cv2.putText(frame, f"Elapsed: {elapsed_str}", (20, 82),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (200, 200, 200), 1)
         if touching:
-            cv2.putText(frame, "TOUCHING!", (20, 95),
+            cv2.putText(frame, "TOUCHING!", (20, 120),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
 
         cv2.imshow("Do Not Touch Face", frame)
