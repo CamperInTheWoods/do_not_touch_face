@@ -136,7 +136,7 @@ def main():
         # 반투명 배경
         overlay = frame.copy()
         box_h = 110 if touching else 65
-        cv2.rectangle(overlay, (10, 10), (300, box_h), (0, 0, 0), -1)
+        cv2.rectangle(overlay, (10, 10), (420, box_h), (0, 0, 0), -1)
         cv2.addWeighted(overlay, 0.5, frame, 0.5, 0, frame)
 
         color = (0, 0, 255) if touching else (255, 255, 255)
